@@ -39,17 +39,25 @@ fun FeederScreen() {
 fun EatingPlaceItem(item: EatingPlace) {
     Card(
         elevation = 4.dp,
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Top,
             modifier = Modifier.padding(8.dp)
         ) {
             EatingPlaceIcon(Icons.Filled.Place, Modifier.weight(0.15f))
-            item.description?.let { EatingPlaceDetails(item.fullName, it, Modifier.weight(0.85f)) }
+            EatingPlaceDetails(
+                item.fullName,
+                item.description,
+                item.address.City,
+                item.categories,
+                Modifier.weight(0.85f)
+            )
         }
     }
 }
+
 
 @Composable
 private fun EatingPlaceIcon(icon: ImageVector, modifier: Modifier) {
@@ -61,20 +69,42 @@ private fun EatingPlaceIcon(icon: ImageVector, modifier: Modifier) {
 }
 
 @Composable
-private fun EatingPlaceDetails(title: String, description: String, modifier: Modifier) {
+private fun EatingPlaceDetails(
+    fullName: String,
+    description: String?,
+    address: String,
+    categories: String,
+    modifier: Modifier
+) {
     Column(modifier = modifier) {
         Text(
-            text = title,
+            text = fullName,
             style = MaterialTheme.typography.h6
         )
         CompositionLocalProvider(
             LocalContentAlpha provides ContentAlpha.medium
         ) {
+            val txt: String?
+            if (description != null) {
+                if (description.length > 80)
+                    txt = description.substring(0, 80).plus("...")
+                else txt = description
+                Text(
+                    text = txt,
+                    style = MaterialTheme.typography.body1
+                )
+            }
+
             Text(
-                text = description,
-                style = MaterialTheme.typography.body2
+                text = address,
+                style = MaterialTheme.typography.body1
+            )
+            Text(
+                text = categories,
+                style = MaterialTheme.typography.subtitle2
             )
         }
+
     }
 }
 
